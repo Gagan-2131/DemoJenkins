@@ -16,21 +16,25 @@ pipeline {
 				mvn clean install -DskipTests
 				echo "Checking the application artifacts"
 				cd target
-				if [[-f mywebapp.war]]
+				if [ -f mywebapp.war ]
 				then
-				echo "Application build succesfully"
-				ls - l mywebapp.war
+    				echo "Application build succesfully"
+    				ls -l mywebapp.war
 				fi
 				echo "Now Deploying the application on Tomcat"
-				sudo/opt/tomcat/bin/shutdown.sh
+				if ps -ef | grep tomcat | grep -v grep
+				then
+				     sudo kill -9 $(ps -ef | grep tomcat | grep -v grep  | awk '{print $2}')
+				fi
 				sleep 10
 				sudo rm -f /opt/tomcat/webapps/mywebapp.war
 				sudo rm -rf /opt/tomcat/webapps/mywebapp
-				sudo cp mywebapp.war /opt/tomcat/webapp/mywebapp.war
+				sudo cp $WORKSPACE/maven-java-web-application/sampleWebApp/target/mywebapp.war /opt/tomcat/webapps/mywebapp.war
 				sudo chmod 755 /opt/tomcat/webapps/mywebapp.war
 				echo "Let's start the Tomcat"
 				sudo /opt/tomcat/bin/startup.sh
-				ps - ef | grep tomcat | grep - v grep '''    
+				ps -ef | grep tomcat | grep -v grep
+			    '''    
 			}
 		}
 	}
