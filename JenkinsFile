@@ -2,7 +2,7 @@ pipeline {
 	agent any
 
 	stages {
-		stage('Tomcat Deployment') {
+		stage('Application Build') {
 			steps {
 				sh '''
 				export PATH=$PATH:/opt/apache-maven-3.9.6/bin
@@ -20,7 +20,14 @@ pipeline {
 				then
     				echo "Application build succesfully"
     				ls -l mywebapp.war
-				fi
+				fi 
+				'''
+			}
+		}
+		
+	    stage('Application Deployment') {
+	        steps {
+	        sh '''
 				echo "Now Deploying the application on Tomcat"
 				if ps -ef | grep tomcat | grep -v grep
 				then
@@ -38,4 +45,9 @@ pipeline {
 			}
 		}
 	}
+	post { 
+        always { 
+            cleanWs()
+        }
+    }
 }
