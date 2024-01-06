@@ -16,7 +16,7 @@ pipeline {
 				mvn clean install -DskipTests
 				echo "Checking the application artifacts"
 				cd target
-				if [-f mywebapp.war]
+				if [[-f mywebapp.war]]
 				then
 				echo "Application build succesfully"
 				ls - l mywebapp.war
