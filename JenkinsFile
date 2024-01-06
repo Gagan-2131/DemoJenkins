@@ -5,15 +5,15 @@ pipeline {
 		stage('Tomcat Deployment') {
 			steps {
 				sh '''
-				export PATH = $PATH:/opt/apache-maven-3.9.6/bin
+				export PATH=$PATH:/opt/apache-maven-3.9.6/bin
 				echo "Deployment stage"
 				echo "Checkout the code"
-				rm - rf maven - java - web - application
-				git clone https: //github.com/denofprogramming/maven-java-web-application.git
-				cd maven - java - web - application
+				rm -rf maven-java-web-application
+				git clone https://github.com/denofprogramming/maven-java-web-application.git
+				cd maven-java-web-application
 				cd sampleWebApp
 				echo "Building the code using mvn command"
-				mvn clean install - DskipTests
+				mvn clean install -DskipTests
 				echo "Checking the application artifacts"
 				cd target
 				if [-f mywebapp.war]
@@ -24,8 +24,8 @@ pipeline {
 				echo "Now Deploying the application on Tomcat"
 				sudo/opt/tomcat/bin/shutdown.sh
 				sleep 10
-				sudo rm - f /opt/tomcat/webapps/mywebapp.war
-				sudo rm - rf /opt/tomcat/webapps/ mywebapp
+				sudo rm -f /opt/tomcat/webapps/mywebapp.war
+				sudo rm -rf /opt/tomcat/webapps/mywebapp
 				sudo cp mywebapp.war /opt/tomcat/webapp/mywebapp.war
 				sudo chmod 755 /opt/tomcat/webapps/mywebapp.war
 				echo "Let's start the Tomcat"
