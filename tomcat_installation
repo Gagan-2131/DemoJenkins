@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Tomcat Installation') {
+            steps {
+                sh '''
+                   export PATH=$PATH:/opt/apache-maven-3.9.6/bin
+                   if [ -f apache-tomcat-8.5.97.tar.gz]
+                   then
+                      rm -f apache-tomcat-8.5.97.tar.gz
+                   fi
+	               wget https://dlcdn.apache.org/tomcat/tomcat-8/v8.5.97/bin/apache-tomcat-8.5.97.tar.gz
+		           tar -zxvf apache-tomcat-8.5.97.tar.gz
+		           sudo cp -r apache-tomcat-8.5.97 /opt/tomcat
+		           sudo chmod -R 775 /opt/tomcat
+		           sudo sed -i 's/8080/9090/g' /opt/tomcat/conf/server.xml
+		           echo "Tomcat Installation Done."
+		        '''   
+            }
+        }
+    }
+}
