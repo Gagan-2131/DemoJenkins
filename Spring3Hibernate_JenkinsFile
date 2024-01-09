@@ -1,0 +1,41 @@
+pipeline {
+	agent any
+
+	stages {
+		
+		stage('Repo cloning') {
+		    steps {
+		        sh 'git clone https://github.com/opstree/spring3hibernate'
+		    }
+		}
+		
+		stage('List content') {
+		    steps {
+		        sh 'ls -lrta'  
+		    }
+		}
+		
+		stage("Application Build") {
+		    steps {
+		        sh 'mvn clean install -DskipTest'
+		    }
+		}
+		
+		stage('Application Deployment') {
+		    steps {
+		    sh '''
+            echo "Now Deploying the application on Tomcat"
+			      sudo rm -f /var/lib/tomcat9/webapps/Sprin3HibernateApp.war
+			      sudo rm -rf /var/lib/tomcat9/webapps/Sprin3HibernateApp
+			      sudo cp /var/lib/jenkins/workspace/Spring3Hibernate/target/Spring3HibernateApp.war /var/lib/tomcat9/webapps
+			      sudo chmod 755 /var/lib/tomcat9/webapps/Spring3HibernateApp.war
+			      '''
+		    }
+		}
+	}
+	post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
